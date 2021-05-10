@@ -1,22 +1,33 @@
 import os
 import sys
+from matplotlib import pyplot as plt, animation
 
-args = list(os.environ["ARG"].split())
-print("args are... ", args)
+#######################################################
+# Get stack value from $(ARG) env                     #
+#######################################################
+args = list(map(int, os.environ["ARG"].split()))
+print("args: ", args)
 
-get_opts = []
+#######################################################
+# Get operations outputs from push_swap executable    #
+#######################################################
+operations_list = []
 while True:
 	try: 
-		get_opts.append(input())
+		operations_list.append(input())
 	except:
 		break
-print(get_opts)
+print("operations_list: ", operations_list)
 
-
+#######################################################
+# Generate two stacks                                 #
+#######################################################
 stack_a = args
 stack_b = []
 
-
+#######################################################
+# Definitions for push_swap visualizer                #
+#######################################################
 def swap(stack):
 	stack[0], stack[1] = stack[1], stack[0]
 
@@ -66,8 +77,32 @@ def operations(a, b, cmd):
 		if len(b) >= 2:
 			reverse_rotate(b)
 
+def push_swap(stack_a, stack_b, ops_list):
+	for cmd in ops_list:
+		operations(stack_a, stack_b, cmd)
+		print("===========start========")
+		yield stack_a, stack_b, cmd
+		print("============end=========\n")
 
-for cmd in get_opts:
-	# print(cmd)
-	operations(stack_a, stack_b, cmd)
-	# print(stack_a, stack_b)
+def push_swap_generator(stack_a, stack_b, ops_list):
+	generator = push_swap(stack_a, stack_b, operations_list)
+	return generator
+
+def visualize(stack_a, stack_b, ops_list):
+	gen = push_swap_generator(stack_a, stack_b, operations_list)
+
+	for data in gen:
+		print(data[0], " type: ", type(data[0]))
+		print(data[1], " type: ", type(data[1]))
+		print(data[2], " type: ", type(data[2]))
+	fig, ax = plt.subplots()
+	ax.set_title("test")
+	
+
+
+#######################################################
+# Execute Visualizer                                  #
+#######################################################
+# if __name__ == "__main__":
+    # visualize()
+	# push_swap(stack_a, stack_b, operations_list)
