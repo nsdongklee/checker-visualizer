@@ -9,3 +9,4 @@
 > pip3 install matplotlib
 > pip3 install PyQt5
 
+> ARG=`ruby -e "puts (0..100).to_a.shuffle.join(' ')"`

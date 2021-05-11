@@ -36,7 +36,7 @@ def visualize():
     fig, ax = plt.subplots()
     ax.set_title("Bubble Sort O(n\N{SUPERSCRIPT TWO})")
     bar_sub = ax.bar(range(len(A)), A, align="edge")
-      
+    print(bar_sub)
     # sets the maximum limit for the x-axis
     ax.set_xlim(0, N)
     text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
@@ -44,7 +44,9 @@ def visualize():
       
     # helper function to update each frame in plot
     def update(A, rects, iteration):
+        print(rects)
         for rect, val in zip(rects, A):
+            
             rect.set_height(val)
         iteration[0] += 1
         text.set_text(f"# of operations: {iteration[0]}")

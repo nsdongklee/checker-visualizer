@@ -33,7 +33,7 @@ def swap(stack):
 
 def push(_from, _to):
 	top = _from.pop(0)
-	_to.append(top)
+	_to.insert(0, top)
 
 def rotate(stack):
 	first = stack.pop(0)
@@ -78,31 +78,71 @@ def operations(a, b, cmd):
 			reverse_rotate(b)
 
 def push_swap(stack_a, stack_b, ops_list):
+	yield stack_a, stack_b, "(null)"
 	for cmd in ops_list:
 		operations(stack_a, stack_b, cmd)
-		print("===========start========")
 		yield stack_a, stack_b, cmd
-		print("============end=========\n")
+
 
 def push_swap_generator(stack_a, stack_b, ops_list):
 	generator = push_swap(stack_a, stack_b, operations_list)
 	return generator
 
 def visualize(stack_a, stack_b, ops_list):
-	gen = push_swap_generator(stack_a, stack_b, operations_list)
-
-	for data in gen:
-		print(data[0], " type: ", type(data[0]))
-		print(data[1], " type: ", type(data[1]))
-		print(data[2], " type: ", type(data[2]))
-	fig, ax = plt.subplots()
-	ax.set_title("test")
+	generator = push_swap_generator(stack_a, stack_b, operations_list)
 	
-
+	xlim = len(stack_a)
+	y_max = max(stack_a)
+	y_min = min(stack_a)
+	
+	figure, axes = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True)
+	
+	figure.suptitle("PUSH-SWAP", fontsize=16)
+	
+	
+	
+	draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5)
+	draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)
+	
+	iteration = [0]
+	
+	def update(frame, draw_bar_a, draw_bar_b, iteration):
+		stack_a = frame[0]
+		stack_b = frame[1]
+		print(stack_a, stack_b, frame[2])
+		axes[0].clear()
+		axes[1].clear()
+		draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5)
+		draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)
+		axes[0].set_title("Stack A")
+		axes[1].set_title("Stack B")
+	
+		axes[0].set_ylabel("Value")
+		axes[1].set_ylabel("Value")
+	
+		axes[0].axhline(0, color="grey", linewidth=0.8)
+		axes[1].axhline(0, color="grey", linewidth=0.8)
+	
+		axes[0].set_xlim(0, xlim - 0.5)
+		axes[0].set_ylim((y_min - 1), (y_max + 1))
+		
+		iteration[0] += 1
+	
+	anime = animation.FuncAnimation(
+		fig=figure,
+		func=update,
+		fargs=(draw_bar_a, draw_bar_b, iteration),
+		frames=generator,
+		repeat=True,
+		blit=False,
+		interval=15,
+	)
+	
+	plt.show()
+	plt.close()
 
 #######################################################
 # Execute Visualizer                                  #
 #######################################################
-# if __name__ == "__main__":
-    # visualize()
-	# push_swap(stack_a, stack_b, operations_list)
+if __name__ == "__main__":
+    visualize(stack_a, stack_b, operations_list)
