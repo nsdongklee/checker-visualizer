@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt, animation
 # Get stack value from $(ARG) env                     #
 #######################################################
 args = list(map(int, os.environ["ARG"].split()))
-print("args: ", args)
+# print("args: ", args)
 
 #######################################################
 # Get operations outputs from push_swap executable    #
@@ -17,7 +17,7 @@ while True:
 		operations_list.append(input())
 	except:
 		break
-print("operations_list: ", operations_list)
+# print("operations_list: ", operations_list)
 
 #######################################################
 # Generate two stacks                                 #
@@ -83,27 +83,19 @@ def push_swap(stack_a, stack_b, ops_list):
 		operations(stack_a, stack_b, cmd)
 		yield stack_a, stack_b, cmd
 
-
 def push_swap_generator(stack_a, stack_b, ops_list):
 	generator = push_swap(stack_a, stack_b, operations_list)
 	return generator
 
 def visualize(stack_a, stack_b, ops_list):
 	generator = push_swap_generator(stack_a, stack_b, operations_list)
-	
 	xlim = len(stack_a)
 	y_max = max(stack_a)
 	y_min = min(stack_a)
-	
-	figure, axes = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True)
-	
+	figure, axes = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, constrained_layout=True)
 	figure.suptitle("PUSH-SWAP", fontsize=16)
-	
-	
-	
 	draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5)
-	draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)
-	
+	draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)	
 	iteration = [0]
 	
 	def update(frame, draw_bar_a, draw_bar_b, iteration):
@@ -116,16 +108,12 @@ def visualize(stack_a, stack_b, ops_list):
 		draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)
 		axes[0].set_title("Stack A")
 		axes[1].set_title("Stack B")
-	
 		axes[0].set_ylabel("Value")
 		axes[1].set_ylabel("Value")
-	
 		axes[0].axhline(0, color="grey", linewidth=0.8)
 		axes[1].axhline(0, color="grey", linewidth=0.8)
-	
 		axes[0].set_xlim(0, xlim - 0.5)
 		axes[0].set_ylim((y_min - 1), (y_max + 1))
-		
 		iteration[0] += 1
 	
 	anime = animation.FuncAnimation(
@@ -137,12 +125,11 @@ def visualize(stack_a, stack_b, ops_list):
 		blit=False,
 		interval=15,
 	)
-	
 	plt.show()
 	plt.close()
 
 #######################################################
-# Execute Visualizer                                  #
+# Execute Checker-Visualizer                          #
 #######################################################
 if __name__ == "__main__":
     visualize(stack_a, stack_b, operations_list)

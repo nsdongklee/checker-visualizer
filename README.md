@@ -1,4 +1,4 @@
-# push_swap_visualizer
+# checker_visualizer
 
 > pip3 install --upgrade pip --user
 > pip3 install python3-tk
