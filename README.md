@@ -1,12 +1,23 @@
 # checker_visualizer
 
-> pip3 install --upgrade pip --user
-> pip3 install python3-tk
-> export ARG='3 2 1 4 5 6'; ppp print.py | ppp main.py
-> ARG='3 2 1 4 5 6';python3 print.py | python3 main.py
-> ARG='3 2 1 4 5 6';./push_swap $ARG | python3 main.py
+> `checker_visualizer` 는  `push_swap` 과제의 실행프로그램 중 `checker` 의 동작 및 사용과 유사하면서 데이터의 시각화를 통해서 최적화에 참고하는 간단한 도구 입니다.
 
-> pip3 install matplotlib
-> pip3 install PyQt5
+### Dependency
 
-> ARG=`ruby -e "puts (0..100).to_a.shuffle.join(' ')"`
+```shell
+# 파이썬 패키지가 업그레이드 되어있지 않다면 아래 명령어를 입력
+pip3 install --upgrade pip --user
+
+# 필요한 라이브러리 설치
+pip3 install matplotlib
+pip3 install PyQt5
+```
+
+### Usage
+
+```shell
+sh checker_visualizer.sh 시작숫자 끝숫자
+```
+
+> 예시 : `sh checker_visualizer.sh 0 100`
+

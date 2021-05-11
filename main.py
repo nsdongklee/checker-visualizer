@@ -6,7 +6,6 @@ from matplotlib import pyplot as plt, animation
 # Get stack value from $(ARG) env                     #
 #######################################################
 args = list(map(int, os.environ["ARG"].split()))
-# print("args: ", args)
 
 #######################################################
 # Get operations outputs from push_swap executable    #
@@ -17,7 +16,6 @@ while True:
 		operations_list.append(input())
 	except:
 		break
-# print("operations_list: ", operations_list)
 
 #######################################################
 # Generate two stacks                                 #
@@ -28,6 +26,8 @@ stack_b = []
 #######################################################
 # Definitions for push_swap visualizer                #
 #######################################################
+pause = False
+
 def swap(stack):
 	stack[0], stack[1] = stack[1], stack[0]
 
@@ -87,6 +87,10 @@ def push_swap_generator(stack_a, stack_b, ops_list):
 	generator = push_swap(stack_a, stack_b, operations_list)
 	return generator
 
+def on_click(event):
+	global pause
+	pause ^= True
+
 def visualize(stack_a, stack_b, ops_list):
 	generator = push_swap_generator(stack_a, stack_b, operations_list)
 	xlim = len(stack_a)
@@ -95,7 +99,8 @@ def visualize(stack_a, stack_b, ops_list):
 	figure, axes = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, constrained_layout=True)
 	figure.suptitle("PUSH-SWAP", fontsize=16)
 	draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5)
-	draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)	
+	draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)
+	figure.canvas.mpl_connect("button_press_event", on_click)
 	iteration = [0]
 	
 	def update(frame, draw_bar_a, draw_bar_b, iteration):
@@ -114,6 +119,7 @@ def visualize(stack_a, stack_b, ops_list):
 		axes[1].axhline(0, color="grey", linewidth=0.8)
 		axes[0].set_xlim(0, xlim - 0.5)
 		axes[0].set_ylim((y_min - 1), (y_max + 1))
+		figure.canvas.mpl_connect("button_press_event", on_click)
 		iteration[0] += 1
 	
 	anime = animation.FuncAnimation(
