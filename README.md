@@ -19,5 +19,15 @@ pip3 install PyQt5
 sh checker_visualizer.sh 시작숫자 끝숫자
 ```
 
-> 예시 : `sh checker_visualizer.sh 0 100`
+> 예시 : `sh checker_visualizer.sh 0 100` 
+>
+> 쉘 스크립트를 실행해도 되고 체커처럼 사용해도 된다. 다만 단독으로 실행하기 위해서는 `$ARG` 를 반드시 `export` 해주어야한다.
+
+
+
+
+
+### 프로토타입 영상
+
+<img width="80%" src="{이미지 경로}"/>
 
