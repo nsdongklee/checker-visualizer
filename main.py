@@ -1,5 +1,5 @@
 import os
-import sys
+# import numpy as np
 from matplotlib import pyplot as plt, animation
 
 #######################################################
@@ -26,7 +26,6 @@ stack_b = []
 #######################################################
 # Definitions for push_swap visualizer                #
 #######################################################
-pause = False
 
 def swap(stack):
 	stack[0], stack[1] = stack[1], stack[0]
@@ -42,7 +41,6 @@ def rotate(stack):
 def reverse_rotate(stack):
 	last = stack.pop()
 	stack.insert(0, last)
-
 
 def operations(a, b, cmd):
 	if cmd == "sa" and len(a) >= 2:
@@ -87,41 +85,63 @@ def push_swap_generator(stack_a, stack_b, ops_list):
 	generator = push_swap(stack_a, stack_b, operations_list)
 	return generator
 
-def on_click(event):
-	global pause
-	pause ^= True
-
 def visualize(stack_a, stack_b, ops_list):
 	generator = push_swap_generator(stack_a, stack_b, operations_list)
+	anime_running = True
 	xlim = len(stack_a)
 	y_max = max(stack_a)
 	y_min = min(stack_a)
-	figure, axes = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, constrained_layout=True)
-	figure.suptitle("PUSH-SWAP", fontsize=16)
-	draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5)
-	draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)
-	figure.canvas.mpl_connect("button_press_event", on_click)
+	figure, axes = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, constrained_layout=True, figsize=(10, 7))
+	figure.suptitle("Check push_swap program", fontsize=16, fontweight="bold")
+	draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5, color="green")
+	draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5, color="green")
+	props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
 	iteration = [0]
+	text = axes[0].text(0.98, 1.017, f"# of operations: {iteration[0]}", fontsize=10, horizontalalignment='right', verticalalignment='bottom', transform=axes[0].transAxes, bbox=props)
+
+	def on_click(event):
+		nonlocal anime_running
+		if anime_running:
+			anime.event_source.stop()
+			anime_running = False
+		else:
+			anime.event_source.start()
+			anime_running = True
 	
+	def is_sorted_all(stack_a, stack_b):
+		for i in range(len(stack_a) - 1):
+			if stack_a[i] > stack_a[i + 1]:
+				return 0
+		if len(stack_b) > 0:
+			return (0)
+		return 1
+
 	def update(frame, draw_bar_a, draw_bar_b, iteration):
 		stack_a = frame[0]
 		stack_b = frame[1]
-		print(stack_a, stack_b, frame[2])
+		ops_cmd = frame[2]
 		axes[0].clear()
 		axes[1].clear()
-		draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5)
-		draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5)
-		axes[0].set_title("Stack A")
-		axes[1].set_title("Stack B")
+		draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5, color="green")
+		draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5, color="green")
+		axes[0].set_title("Stack A", fontstyle="italic", va="center_baseline")
+		axes[1].set_title("Stack B", fontstyle="italic", va="center_baseline")
 		axes[0].set_ylabel("Value")
 		axes[1].set_ylabel("Value")
 		axes[0].axhline(0, color="grey", linewidth=0.8)
 		axes[1].axhline(0, color="grey", linewidth=0.8)
 		axes[0].set_xlim(0, xlim - 0.5)
 		axes[0].set_ylim((y_min - 1), (y_max + 1))
-		figure.canvas.mpl_connect("button_press_event", on_click)
-		iteration[0] += 1
-	
+		if is_sorted_all(stack_a, stack_b):
+			iteration[0] = len(ops_list)
+			ops_cmd = "(done)"
+		elif ops_cmd == "(null)" and iteration[0] < 3:
+			iteration[0] = 0
+		elif ops_cmd in ops_list and iteration[0] <= len(ops_list):
+			iteration[0] += 1
+		axes[0].text(0.98, 1.017, f"# of operations: {iteration[0]}, {ops_cmd}", fontsize=10, horizontalalignment='right', verticalalignment='bottom', transform=axes[0].transAxes, bbox=props)
+
+	figure.canvas.mpl_connect("button_press_event", on_click)
 	anime = animation.FuncAnimation(
 		fig=figure,
 		func=update,
@@ -129,7 +149,7 @@ def visualize(stack_a, stack_b, ops_list):
 		frames=generator,
 		repeat=True,
 		blit=False,
-		interval=15,
+		interval=15
 	)
 	plt.show()
 	plt.close()
