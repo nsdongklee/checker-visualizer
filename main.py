@@ -91,7 +91,7 @@ def visualize(stack_a, stack_b, ops_list):
 	xlim = len(stack_a)
 	y_max = max(stack_a)
 	y_min = min(stack_a)
-	figure, axes = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, constrained_layout=True, figsize=(10, 7))
+	figure, axes = plt.subplots(nrows=2, ncols=1, sharex=True, sharey=True, constrained_layout=True) #, figsize=(10, 7))
 	figure.suptitle("Check push_swap program", fontsize=16, fontweight="bold")
 	draw_bar_a = axes[0].bar(range(len(stack_a)), stack_a, align="center", linewidth=0.5, color="green")
 	draw_bar_b = axes[1].bar(range(len(stack_b)), stack_b, align="center", linewidth=0.5, color="green")
